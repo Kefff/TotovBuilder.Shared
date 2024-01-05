@@ -61,7 +61,7 @@ namespace TotovBuilder.Shared.Test.Azure
             AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(loggerMock.Object, getOptionsFunction);
 
             // Act
-            Result result = await azureBlobStorageManager.UpdateContainer(containerName, new Dictionary<string, string>());
+            Result result = await azureBlobStorageManager.UpdateContainer(containerName, new Dictionary<string, byte[]>());
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -91,7 +91,7 @@ namespace TotovBuilder.Shared.Test.Azure
             AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(loggerMock.Object, getOptionsFunction);
 
             // Act
-            Result result = await azureBlobStorageManager.UpdateBlob(containerName, "Blob", "Data");
+            Result result = await azureBlobStorageManager.UpdateBlob(containerName, "Blob", Array.Empty<byte>());
 
             // Assert
             result.IsSuccess.Should().BeFalse();

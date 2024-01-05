@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using System.Text.RegularExpressions;
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
@@ -65,21 +67,16 @@ namespace TotovBuilder.Shared.Azure
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
-        public Task<Result> UpdateContainer(string containerName, Dictionary<string, string> data)
+        public Task<Result> UpdateBlob(string containerName, string blobName, string data)
         {
-            Result configurationCheckResult = CheckConfiguration(containerName);
+            byte[] encodedData = Encoding.UTF8.GetBytes(data);
 
-            if (!configurationCheckResult.IsSuccess)
-            {
-                return Task.FromResult(configurationCheckResult);
-            }
-
-            return Task.Run(() => ExecuteUpdateContainer(containerName, data));
+            return UpdateBlob(containerName, blobName, encodedData);
         }
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
-        public Task<Result> UpdateBlob(string containerName, string blobName, string data)
+        public Task<Result> UpdateBlob(string containerName, string blobName, byte[] data)
         {
             Result configurationCheckResult = CheckConfiguration(containerName);
 
@@ -89,6 +86,29 @@ namespace TotovBuilder.Shared.Azure
             }
 
             return Task.Run(() => ExecuteCreateOrUpdateBlob(containerName, blobName, data));
+        }
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
+        public Task<Result> UpdateContainer(string containerName, Dictionary<string, string> data, params string[] deletionIgnorePatterns)
+        {
+            Dictionary<string, byte[]> encodedData = data.ToDictionary(kvp => kvp.Key, kvp => Encoding.UTF8.GetBytes(kvp.Value));
+
+            return UpdateContainer(containerName, encodedData);
+        }
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
+        public Task<Result> UpdateContainer(string containerName, Dictionary<string, byte[]> data, params string[] deletionIgnorePatterns)
+        {
+            Result configurationCheckResult = CheckConfiguration(containerName);
+
+            if (!configurationCheckResult.IsSuccess)
+            {
+                return Task.FromResult(configurationCheckResult);
+            }
+
+            return Task.Run(() => ExecuteUpdateContainer(containerName, data, deletionIgnorePatterns));
         }
 
         /// <summary>
@@ -120,7 +140,7 @@ namespace TotovBuilder.Shared.Azure
         /// <param name="data">Data to set.</param>
         /// <param name="blobContainerClient">Already instanciated blob container client.</param>
         [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
-        private Result ExecuteCreateOrUpdateBlob(string containerName, string blobName, string data, BlobContainerClient? blobContainerClient = null)
+        private Result ExecuteCreateOrUpdateBlob(string containerName, string blobName, byte[] data, BlobContainerClient? blobContainerClient = null)
         {
             try
             {
@@ -129,17 +149,13 @@ namespace TotovBuilder.Shared.Azure
                 if (blobContainerClient == null)
                 {
                     blobContainerClient = new BlobContainerClient(Options.ConnectionString, containerName);
+                    blobContainerClient.CreateIfNotExists();
                 }
 
                 BlockBlobClient blockBlobClient = blobContainerClient.GetBlockBlobClient(blobName);
                 BlobHttpHeaders httpHeaders = new BlobHttpHeaders { ContentType = MimeUtility.GetMimeMapping(blobName) };
 
-                using MemoryStream memoryStream = new MemoryStream();
-                StreamWriter writer = new StreamWriter(memoryStream);
-                writer.Write(data);
-                writer.Flush();
-                memoryStream.Position = 0;
-
+                using MemoryStream memoryStream = new MemoryStream(data);
                 Task updateTask = blockBlobClient.UploadAsync(memoryStream, httpHeaders);
 
                 if (!updateTask.Wait(Options.ExecutionTimeout * 1000))
@@ -210,32 +226,38 @@ namespace TotovBuilder.Shared.Azure
 
         /// <summary>
         /// Updates the whole content of a Azure blob container.
-        /// New blobs are create, and existing blobs are update or deleted.
+        /// New blobs are create, and existing blobs are update or deleted except those included in the ignore pattern.
         /// </summary>
         /// <param name="containerName">Name of the container to update.</param>
         /// <param name="data">List of blob names and their data.</param>
-        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage. ")]
-        private Result ExecuteUpdateContainer(string containerName, Dictionary<string, string> data)
+        /// <param name="deletionIgnorePattern">Pattern to avoid deleting matching blobs.</param>
+        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
+        private Result ExecuteUpdateContainer(string containerName, Dictionary<string, byte[]> data, params string[] deletionIgnorePatterns)
         {
+            data = data.ToDictionary(kvp => kvp.Key.Replace(Path.DirectorySeparatorChar, '/'), kvp => kvp.Value); // Making sure blob name have the same separators as on Azure
+
             try
             {
                 Logger.LogInformation(string.Format(Properties.Resources.ContainerUpdating, containerName));
 
                 List<string> blobsToDelete = new List<string>();
-
                 BlobContainerClient blobContainerClient = new BlobContainerClient(Options.ConnectionString, containerName);
-                Pageable<BlobItem> existingBlobs = blobContainerClient.GetBlobs();
+                blobContainerClient.CreateIfNotExists();
 
-                foreach (BlobItem existingBlob in existingBlobs)
+                foreach (Page<BlobItem> page in blobContainerClient.GetBlobs().AsPages())
                 {
-                    if (!data.ContainsKey(existingBlob.Name))
+                    foreach (BlobItem existingBlob in page.Values)
                     {
-                        blobsToDelete.Add(existingBlob.Name);
+                        if (!data.ContainsKey(existingBlob.Name)
+                            && (!deletionIgnorePatterns.Any(dip => Regex.IsMatch(existingBlob.Name, dip))))
+                        {
+                            blobsToDelete.Add(existingBlob.Name);
+                        }
                     }
                 }
 
                 List<Task<Result>> createAndUpdateTasks = new List<Task<Result>>();
-                List<Task> deletionTasks = new List<Task>();
+                List<Task> deleteTasks = new List<Task>();
 
                 foreach (string blobName in data.Keys)
                 {
@@ -244,14 +266,18 @@ namespace TotovBuilder.Shared.Azure
 
                 foreach (string blobName in blobsToDelete)
                 {
-                    deletionTasks.Add(Task.Run(() =>
+                    deleteTasks.Add(Task.Run(() =>
                     {
+                        Logger.LogInformation(string.Format(Properties.Resources.BlobDeleting, blobName, containerName));
+
                         BlockBlobClient blockBlobClient = blobContainerClient.GetBlockBlobClient(blobName);
-                        blockBlobClient.Delete();
+                        blockBlobClient.DeleteIfExists();
                     }));
                 }
 
-                Task.WaitAll(createAndUpdateTasks.Cast<Task>().Concat(deletionTasks.Cast<Task>()).ToArray());
+                Task.WaitAll(
+                    Task.WhenAll(createAndUpdateTasks),
+                    Task.WhenAll(deleteTasks));
 
                 if (!createAndUpdateTasks.All(t => t.IsCompletedSuccessfully))
                 {

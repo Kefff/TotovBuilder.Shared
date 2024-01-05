@@ -16,7 +16,7 @@ namespace TotovBuilder.Shared.Test.Extensions
     public class ServiceCollectionExtensionsTest
     {
         [Fact]
-        public async Task ConfigureAzureBlobStorageManager_ShouldAddAzureBlobStorageManagerToServiceCollection()
+        public async Task AddAzureBlobStorageManager_ShouldAddAzureBlobStorageManagerToServiceCollection()
         {
             // Arrange
             Mock<ILogger<AzureBlobStorageManager>> loggerMock = new Mock<ILogger<AzureBlobStorageManager>>();
@@ -32,7 +32,7 @@ namespace TotovBuilder.Shared.Test.Extensions
             }
 
             // Act
-            serviceCollection.ConfigureAzureBlobStorageManager(getOptionsFunction);
+            serviceCollection.AddAzureBlobStorageManager(getOptionsFunction);
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
             IAzureBlobStorageManager service = serviceProvider.GetRequiredService<IAzureBlobStorageManager>();

@@ -11,12 +11,12 @@ namespace TotovBuilder.Shared.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Configures the Azure blob manager.
+        /// Add the Azure blob manager.
         /// </summary>
         /// <param name="services">Services.</param>
         /// <param name="getOptionsFunction">Function for getting the Azure blob storage options to use.</param>
         /// <returns>Services.</returns>
-        public static IServiceCollection ConfigureAzureBlobStorageManager(this IServiceCollection services, Func<IServiceProvider, AzureBlobStorageManagerOptions> getOptionsFunction)
+        public static IServiceCollection AddAzureBlobStorageManager(this IServiceCollection services, Func<IServiceProvider, AzureBlobStorageManagerOptions> getOptionsFunction)
         {
             services.AddSingleton<IAzureBlobStorageManager>((IServiceProvider serviceProvider) =>
             {

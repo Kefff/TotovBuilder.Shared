@@ -61,6 +61,15 @@ namespace TotovBuilder.Shared.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deleting blob &quot;{0}&quot; from container &quot;{1}&quot;..
+        /// </summary>
+        internal static string BlobDeleting {
+            get {
+                return ResourceManager.GetString("BlobDeleting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blob &quot;{0}&quot; fetched from container &quot;{1}&quot;..
         /// </summary>
         internal static string BlobFetched {
