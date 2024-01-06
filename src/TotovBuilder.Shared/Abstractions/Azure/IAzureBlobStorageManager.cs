@@ -1,4 +1,6 @@
-﻿using FluentResults;
+﻿using Azure.Storage.Blobs.Models;
+using FluentResults;
+using TotovBuilder.Shared.Azure;
 
 namespace TotovBuilder.Shared.Abstractions.Azure
 {
@@ -21,8 +23,9 @@ namespace TotovBuilder.Shared.Abstractions.Azure
         /// </summary>
         /// <param name="containerName">Name of the container to update.</param>
         /// <param name="data">List of blob names and their data.</param>
+        /// <param name="httpHeaders">HTTP headers to apply to each updated blob.</param>
         /// <param name="deletionIgnorePatterns">Patterns to avoid deleting matching blobs.</param>
-        Task<Result> UpdateContainer(string containerName, Dictionary<string, string> data, params string[] deletionIgnorePatterns);
+        Task<Result> UpdateContainer(string containerName, Dictionary<string, string> data, BlobHttpHeaders? httpHeaders = null, params string[] deletionIgnorePatterns);
 
         /// <summary>
         /// Updates the whole content of a Azure blob container.
@@ -30,8 +33,9 @@ namespace TotovBuilder.Shared.Abstractions.Azure
         /// </summary>
         /// <param name="containerName">Name of the container to update.</param>
         /// <param name="data">List of blob names and their data.</param>
+        /// <param name="httpHeaders">HTTP headers to apply to each updated blob.</param>
         /// <param name="deletionIgnorePatterns">Patterns to avoid deleting matching blobs.</param>
-        Task<Result> UpdateContainer(string containerName, Dictionary<string, byte[]> data, params string[] deletionIgnorePatterns);
+        Task<Result> UpdateContainer(string containerName, Dictionary<string, byte[]> data, BlobHttpHeaders? httpHeaders = null, params string[] deletionIgnorePatterns);
 
         /// <summary>
         /// Updates data of an Azure blob.
@@ -39,7 +43,8 @@ namespace TotovBuilder.Shared.Abstractions.Azure
         /// <param name="containerName">Name of the container containing the blob to update.</param>
         /// <param name="blobName">Name of the blob to update.</param>
         /// <param name="data">Data to upload.</param>
-        Task<Result> UpdateBlob(string containerName, string blobName, string data);
+        /// <param name="httpHeaders">HTTP headers to apply to the updated blob.</param>
+        Task<Result> UpdateBlob(string containerName, string blobName, string data, BlobHttpHeaders? httpHeaders = null);
 
         /// <summary>
         /// Updates data of an Azure blob.
@@ -47,6 +52,7 @@ namespace TotovBuilder.Shared.Abstractions.Azure
         /// <param name="containerName">Name of the container containing the blob to update.</param>
         /// <param name="blobName">Name of the blob to update.</param>
         /// <param name="data">Data to upload.</param>
-        Task<Result> UpdateBlob(string containerName, string blobName, byte[] data);
+        /// <param name="httpHeaders">HTTP headers to apply to the updated blob.</param>
+        Task<Result> UpdateBlob(string containerName, string blobName, byte[] data, BlobHttpHeaders? httpHeaders = null);
     }
 }

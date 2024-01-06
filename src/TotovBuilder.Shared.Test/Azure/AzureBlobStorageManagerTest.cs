@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Azure.Storage.Blobs.Models;
+using FluentAssertions;
 using FluentResults;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -61,7 +62,7 @@ namespace TotovBuilder.Shared.Test.Azure
             AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(loggerMock.Object, getOptionsFunction);
 
             // Act
-            Result result = await azureBlobStorageManager.UpdateContainer(containerName, new Dictionary<string, byte[]>());
+            Result result = await azureBlobStorageManager.UpdateContainer(containerName, new Dictionary<string, byte[]>(), It.IsAny<BlobHttpHeaders>());
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -91,7 +92,7 @@ namespace TotovBuilder.Shared.Test.Azure
             AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(loggerMock.Object, getOptionsFunction);
 
             // Act
-            Result result = await azureBlobStorageManager.UpdateBlob(containerName, "Blob", Array.Empty<byte>());
+            Result result = await azureBlobStorageManager.UpdateBlob(containerName, "Blob", Array.Empty<byte>(), It.IsAny<BlobHttpHeaders>());
 
             // Assert
             result.IsSuccess.Should().BeFalse();
