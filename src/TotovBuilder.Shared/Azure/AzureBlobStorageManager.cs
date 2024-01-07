@@ -90,16 +90,16 @@ namespace TotovBuilder.Shared.Azure
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
-        public Task<Result> UpdateContainer(string containerName, Dictionary<string, string> data, BlobHttpHeaders? httpHeaders = null, params string[] deletionIgnorePatterns)
+        public Task<Result> UpdateContainer(string containerName, Dictionary<string, string> data, Func<BlobHttpHeaders>? createHttpHeadersFunction = null, params string[] deletionIgnorePatterns)
         {
             Dictionary<string, byte[]> encodedData = data.ToDictionary(kvp => kvp.Key, kvp => Encoding.UTF8.GetBytes(kvp.Value));
 
-            return UpdateContainer(containerName, encodedData, httpHeaders, deletionIgnorePatterns);
+            return UpdateContainer(containerName, encodedData, createHttpHeadersFunction, deletionIgnorePatterns);
         }
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
-        public Task<Result> UpdateContainer(string containerName, Dictionary<string, byte[]> data, BlobHttpHeaders? httpHeaders = null, params string[] deletionIgnorePatterns)
+        public Task<Result> UpdateContainer(string containerName, Dictionary<string, byte[]> data, Func<BlobHttpHeaders>? createHttpHeadersFunction = null, params string[] deletionIgnorePatterns)
         {
             Result configurationCheckResult = CheckConfiguration(containerName);
 
@@ -108,7 +108,7 @@ namespace TotovBuilder.Shared.Azure
                 return Task.FromResult(configurationCheckResult);
             }
 
-            return Task.Run(() => ExecuteUpdateContainer(containerName, data, httpHeaders, deletionIgnorePatterns));
+            return Task.Run(() => ExecuteUpdateContainer(containerName, data, createHttpHeadersFunction, deletionIgnorePatterns));
         }
 
         /// <summary>
@@ -237,10 +237,10 @@ namespace TotovBuilder.Shared.Azure
         /// </summary>
         /// <param name="containerName">Name of the container to update.</param>
         /// <param name="data">List of blob names and their data.</param>
-        /// <param name="httpHeaders">HTTP headers to apply to the updated blobs.</param>
+        /// <param name="createHttpHeadersFunction">Function for creating the HTTP headers to apply to the updated blobs.</param>
         /// <param name="deletionIgnorePatterns">Patterns to avoid deleting matching blobs.</param>
         [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
-        private Result ExecuteUpdateContainer(string containerName, Dictionary<string, byte[]> data, BlobHttpHeaders? httpHeaders, params string[] deletionIgnorePatterns)
+        private Result ExecuteUpdateContainer(string containerName, Dictionary<string, byte[]> data, Func<BlobHttpHeaders>? createHttpHeadersFunction, params string[] deletionIgnorePatterns)
         {
             data = data.ToDictionary(kvp => kvp.Key.Replace(Path.DirectorySeparatorChar, '/'), kvp => kvp.Value); // Making sure blob name have the same separators as on Azure
 
@@ -269,6 +269,13 @@ namespace TotovBuilder.Shared.Azure
 
                 foreach (string blobName in data.Keys)
                 {
+                    BlobHttpHeaders? httpHeaders = null;
+
+                    if (createHttpHeadersFunction != null)
+                    {
+                        httpHeaders = createHttpHeadersFunction();
+                    }
+
                     createAndUpdateTasks.Add(Task.Run(() => ExecuteCreateOrUpdateBlob(containerName, blobName, data[blobName], httpHeaders, blobContainerClient)));
                 }
 
