@@ -117,46 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BlobDeleting" xml:space="preserve">
-    <value>Deleting blob "{0}" from container "{1}".</value>
-  </data>
   <data name="BlobFetched" xml:space="preserve">
-    <value>Blob "{0}" fetched from container "{1}".</value>
+    <value>Azure blob "{0}" fetched from container "{1}".</value>
   </data>
-  <data name="BlobFetching" xml:space="preserve">
-    <value>Fetching blob "{0}" in container "{1}".</value>
-  </data>
-  <data name="BlobFetchingError" xml:space="preserve">
+  <data name="BlobFetchError" xml:space="preserve">
     <value>Error while fetching Azure blob "{0}" from container "{1}" :
 {2}</value>
   </data>
+  <data name="BlobFetchExecutionDelayExceeded" xml:space="preserve">
+    <value>Execution delay ({0}s) exceeded while fetching Azure blob "{1}" from container "{2}".</value>
+  </data>
   <data name="BlobUpdated" xml:space="preserve">
-    <value>Blob "{0}" updated in container "{1}".</value>
+    <value>Azure blob "{0}" updated in container "{1}".</value>
   </data>
-  <data name="BlobUpdating" xml:space="preserve">
-    <value>Updating blob "{0}" in container "{1}".</value>
-  </data>
-  <data name="BlobUpdatingError" xml:space="preserve">
+  <data name="BlobUpdateError" xml:space="preserve">
     <value>Error while updating Azure blob "{0}" in container "{1}" :
 {2}</value>
   </data>
+  <data name="BlobUpdateExecutionDelayExceeded" xml:space="preserve">
+    <value>Execution delay ({0}s) exceeded while updating Azure blob "{1}" in container "{2}".</value>
+  </data>
   <data name="ContainerUpdated" xml:space="preserve">
-    <value>Container "{0}" updated.</value>
+    <value>Azure container "{0}" updated.</value>
   </data>
-  <data name="ContainerUpdating" xml:space="preserve">
-    <value>Updating container "{0}".</value>
-  </data>
-  <data name="ContainerUpdatingError" xml:space="preserve">
-    <value>Error while updating Azure container"{0}" :
+  <data name="ContainerUpdateError" xml:space="preserve">
+    <value>Error while updating Azure container "{0}" :
 {1}</value>
   </data>
-  <data name="ExecutionDelayExceeded" xml:space="preserve">
-    <value>Execution delay exceeded.</value>
+  <data name="DeletingBlob" xml:space="preserve">
+    <value>Deleting Azure blob "{0}" from container "{1}".</value>
+  </data>
+  <data name="FetchingBlob" xml:space="preserve">
+    <value>Fetching Azure blob "{0}" in container "{1}".</value>
   </data>
   <data name="InvalidConfiguration" xml:space="preserve">
     <value>Invalid configuration for connecting to Azure blob storage :
 - Connection string : "{0}",
 - Execution timeout : {1},
 - Container name : "{2}"</value>
+  </data>
+  <data name="UpdatingBlob" xml:space="preserve">
+    <value>Updating Azure blob "{0}" in container "{1}".</value>
+  </data>
+  <data name="UpdatingContainer" xml:space="preserve">
+    <value>Updating Azure container "{0}".</value>
   </data>
 </root>

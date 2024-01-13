@@ -19,11 +19,11 @@
         /// Initializes a new instance of the <see cref="AzureBlobStorageManagerOptions"/> class.
         /// </summary>
         /// <param name="connectionString">Connection string to the Azure blob storage</param>
-        /// <param name="executionTimeOut">Time (in seconds) before an operations made on the Azure blob storage are timed out</param>
-        public AzureBlobStorageManagerOptions(string connectionString, int executionTimeOut)
+        /// <param name="executionTimeout">Time (in seconds) before an operations made on the Azure blob storage are timed out</param>
+        public AzureBlobStorageManagerOptions(string connectionString, int executionTimeout)
         {
             ConnectionString = connectionString;
-            ExecutionTimeout = executionTimeOut;
+            ExecutionTimeout = executionTimeout;
         }
     }
 }

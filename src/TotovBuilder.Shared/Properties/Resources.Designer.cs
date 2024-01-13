@@ -61,16 +61,7 @@ namespace TotovBuilder.Shared.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deleting blob &quot;{0}&quot; from container &quot;{1}&quot;..
-        /// </summary>
-        internal static string BlobDeleting {
-            get {
-                return ResourceManager.GetString("BlobDeleting", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Blob &quot;{0}&quot; fetched from container &quot;{1}&quot;..
+        ///   Looks up a localized string similar to Azure blob &quot;{0}&quot; fetched from container &quot;{1}&quot;..
         /// </summary>
         internal static string BlobFetched {
             get {
@@ -79,26 +70,26 @@ namespace TotovBuilder.Shared.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fetching blob &quot;{0}&quot; in container &quot;{1}&quot;..
-        /// </summary>
-        internal static string BlobFetching {
-            get {
-                return ResourceManager.GetString("BlobFetching", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error while fetching Azure blob &quot;{0}&quot; from container &quot;{1}&quot; :
         ///{2}.
         /// </summary>
-        internal static string BlobFetchingError {
+        internal static string BlobFetchError {
             get {
-                return ResourceManager.GetString("BlobFetchingError", resourceCulture);
+                return ResourceManager.GetString("BlobFetchError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Blob &quot;{0}&quot; updated in container &quot;{1}&quot;..
+        ///   Looks up a localized string similar to Execution delay ({0}s) exceeded while fetching Azure blob &quot;{1}&quot; from container &quot;{2}&quot;..
+        /// </summary>
+        internal static string BlobFetchExecutionDelayExceeded {
+            get {
+                return ResourceManager.GetString("BlobFetchExecutionDelayExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure blob &quot;{0}&quot; updated in container &quot;{1}&quot;..
         /// </summary>
         internal static string BlobUpdated {
             get {
@@ -107,26 +98,26 @@ namespace TotovBuilder.Shared.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updating blob &quot;{0}&quot; in container &quot;{1}&quot;..
-        /// </summary>
-        internal static string BlobUpdating {
-            get {
-                return ResourceManager.GetString("BlobUpdating", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error while updating Azure blob &quot;{0}&quot; in container &quot;{1}&quot; :
         ///{2}.
         /// </summary>
-        internal static string BlobUpdatingError {
+        internal static string BlobUpdateError {
             get {
-                return ResourceManager.GetString("BlobUpdatingError", resourceCulture);
+                return ResourceManager.GetString("BlobUpdateError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Container &quot;{0}&quot; updated..
+        ///   Looks up a localized string similar to Execution delay ({0}s) exceeded while updating Azure blob &quot;{1}&quot; in container &quot;{2}&quot;..
+        /// </summary>
+        internal static string BlobUpdateExecutionDelayExceeded {
+            get {
+                return ResourceManager.GetString("BlobUpdateExecutionDelayExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure container &quot;{0}&quot; updated..
         /// </summary>
         internal static string ContainerUpdated {
             get {
@@ -135,30 +126,30 @@ namespace TotovBuilder.Shared.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updating container &quot;{0}&quot;..
-        /// </summary>
-        internal static string ContainerUpdating {
-            get {
-                return ResourceManager.GetString("ContainerUpdating", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error while updating Azure container&quot;{0}&quot; :
+        ///   Looks up a localized string similar to Error while updating Azure container &quot;{0}&quot; :
         ///{1}.
         /// </summary>
-        internal static string ContainerUpdatingError {
+        internal static string ContainerUpdateError {
             get {
-                return ResourceManager.GetString("ContainerUpdatingError", resourceCulture);
+                return ResourceManager.GetString("ContainerUpdateError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Execution delay exceeded..
+        ///   Looks up a localized string similar to Deleting Azure blob &quot;{0}&quot; from container &quot;{1}&quot;..
         /// </summary>
-        internal static string ExecutionDelayExceeded {
+        internal static string DeletingBlob {
             get {
-                return ResourceManager.GetString("ExecutionDelayExceeded", resourceCulture);
+                return ResourceManager.GetString("DeletingBlob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fetching Azure blob &quot;{0}&quot; in container &quot;{1}&quot;..
+        /// </summary>
+        internal static string FetchingBlob {
+            get {
+                return ResourceManager.GetString("FetchingBlob", resourceCulture);
             }
         }
         
@@ -171,6 +162,24 @@ namespace TotovBuilder.Shared.Properties {
         internal static string InvalidConfiguration {
             get {
                 return ResourceManager.GetString("InvalidConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating Azure blob &quot;{0}&quot; in container &quot;{1}&quot;..
+        /// </summary>
+        internal static string UpdatingBlob {
+            get {
+                return ResourceManager.GetString("UpdatingBlob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating Azure container &quot;{0}&quot;..
+        /// </summary>
+        internal static string UpdatingContainer {
+            get {
+                return ResourceManager.GetString("UpdatingContainer", resourceCulture);
             }
         }
     }

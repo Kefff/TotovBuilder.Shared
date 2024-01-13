@@ -1,10 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
-using Azure;
-using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs.Specialized;
 using FluentResults;
 using Microsoft.Extensions.Logging;
 using MimeMapping;
@@ -36,6 +32,11 @@ namespace TotovBuilder.Shared.Azure
         private readonly Func<AzureBlobStorageManagerOptions> _getOptionsFunction;
 
         /// <summary>
+        /// Blob container client wrapper factory.
+        /// </summary>
+        private readonly IBlobContainerClientWrapperFactory BlobContainerClientWrapperFactory;
+
+        /// <summary>
         /// Logger.
         /// </summary>
         private readonly ILogger<AzureBlobStorageManager> Logger;
@@ -44,15 +45,16 @@ namespace TotovBuilder.Shared.Azure
         /// Initializes a new instance of the <see cref="AzureBlobStorageManager"/> class.
         /// </summary>
         /// <param name="logger">Logger.</param>
+        /// <param name="blobContainerClientWrapperFactory">Blob container client wrapper factory.</param>
         /// <param name="getOptionsFunction">Function for getting the options to use.</param>
-        public AzureBlobStorageManager(ILogger<AzureBlobStorageManager> logger, Func<AzureBlobStorageManagerOptions> getOptionsFunction)
+        public AzureBlobStorageManager(ILogger<AzureBlobStorageManager> logger, IBlobContainerClientWrapperFactory blobContainerClientWrapperFactory, Func<AzureBlobStorageManagerOptions> getOptionsFunction)
         {
             _getOptionsFunction = getOptionsFunction;
+            BlobContainerClientWrapperFactory = blobContainerClientWrapperFactory;
             Logger = logger;
         }
 
         /// <inheritdoc/>
-        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
         public Task<Result<string>> FetchBlob(string containerName, string blobName)
         {
             Result configurationCheckResult = CheckConfiguration(containerName);
@@ -66,7 +68,6 @@ namespace TotovBuilder.Shared.Azure
         }
 
         /// <inheritdoc/>
-        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
         public Task<Result> UpdateBlob(string containerName, string blobName, string data, BlobHttpHeaders? httpHeaders = null)
         {
             byte[] encodedData = Encoding.UTF8.GetBytes(data);
@@ -75,7 +76,6 @@ namespace TotovBuilder.Shared.Azure
         }
 
         /// <inheritdoc/>
-        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
         public Task<Result> UpdateBlob(string containerName, string blobName, byte[] data, BlobHttpHeaders? httpHeaders = null)
         {
             Result configurationCheckResult = CheckConfiguration(containerName);
@@ -89,7 +89,6 @@ namespace TotovBuilder.Shared.Azure
         }
 
         /// <inheritdoc/>
-        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
         public Task<Result> UpdateContainer(string containerName, Dictionary<string, string> data, Func<BlobHttpHeaders>? createHttpHeadersFunction = null, params string[] deletionIgnorePatterns)
         {
             Dictionary<string, byte[]> encodedData = data.ToDictionary(kvp => kvp.Key, kvp => Encoding.UTF8.GetBytes(kvp.Value));
@@ -98,7 +97,6 @@ namespace TotovBuilder.Shared.Azure
         }
 
         /// <inheritdoc/>
-        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
         public Task<Result> UpdateContainer(string containerName, Dictionary<string, byte[]> data, Func<BlobHttpHeaders>? createHttpHeadersFunction = null, params string[] deletionIgnorePatterns)
         {
             Result configurationCheckResult = CheckConfiguration(containerName);
@@ -116,7 +114,6 @@ namespace TotovBuilder.Shared.Azure
         /// </summary>
         /// <param name="containerName">Container name.</param>
         /// <returns>Check result.</returns>
-        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
         private Result CheckConfiguration(string containerName)
         {
             if (string.IsNullOrWhiteSpace(Options.ConnectionString)
@@ -140,20 +137,19 @@ namespace TotovBuilder.Shared.Azure
         /// <param name="data">Data to set.</param>
         /// <param name="httpHeaders">HTTP headers to apply to the updated blob.</param>
         /// <param name="blobContainerClient">Already instanciated blob container client.</param>
-        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
-        private Result ExecuteCreateOrUpdateBlob(string containerName, string blobName, byte[] data, BlobHttpHeaders? httpHeaders, BlobContainerClient? blobContainerClient = null)
+        private Result ExecuteCreateOrUpdateBlob(string containerName, string blobName, byte[] data, BlobHttpHeaders? httpHeaders, IBlobContainerClientWrapper? blobContainerClient = null)
         {
             try
             {
-                Logger.LogInformation(string.Format(Properties.Resources.BlobUpdating, blobName, containerName));
+                Logger.LogInformation(string.Format(Properties.Resources.UpdatingBlob, blobName, containerName));
 
                 if (blobContainerClient == null)
                 {
-                    blobContainerClient = new BlobContainerClient(Options.ConnectionString, containerName);
+                    blobContainerClient = BlobContainerClientWrapperFactory.Create(Options.ConnectionString, containerName);
                     blobContainerClient.CreateIfNotExists();
                 }
 
-                BlockBlobClient blockBlobClient = blobContainerClient.GetBlockBlobClient(blobName);
+                IBlockBlobClientWrapper blockBlobClient = blobContainerClient.GetBlockBlobClient(blobName);
 
                 if (httpHeaders == null)
                 {
@@ -167,7 +163,7 @@ namespace TotovBuilder.Shared.Azure
 
                 if (!updateTask.Wait(Options.ExecutionTimeout * 1000))
                 {
-                    string error = Properties.Resources.ExecutionDelayExceeded;
+                    string error = string.Format(Properties.Resources.BlobUpdateExecutionDelayExceeded, Options.ExecutionTimeout, blobName, containerName);
                     Logger.LogError(error);
 
                     return Result.Fail(error);
@@ -179,7 +175,7 @@ namespace TotovBuilder.Shared.Azure
             }
             catch (Exception e)
             {
-                string error = string.Format(Properties.Resources.BlobUpdatingError, blobName, containerName, e);
+                string error = string.Format(Properties.Resources.BlobUpdateError, blobName, containerName, e);
                 Logger.LogError(error);
 
                 return Result.Fail(error);
@@ -192,22 +188,21 @@ namespace TotovBuilder.Shared.Azure
         /// <param name="containerName">Name of the container containing the blob to fetch.</param>
         /// <param name="blobName">Name of the blob to fetch.</param>
         /// <returns>Blob value.</returns>
-        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
         private Result<string> ExecuteFetchBlob(string containerName, string blobName)
         {
             try
             {
-                Logger.LogInformation(string.Format(Properties.Resources.BlobFetching, blobName, containerName));
+                Logger.LogInformation(string.Format(Properties.Resources.FetchingBlob, blobName, containerName));
 
-                BlobContainerClient blobContainerClient = new BlobContainerClient(Options.ConnectionString, containerName);
-                BlockBlobClient blockBlobClient = blobContainerClient.GetBlockBlobClient(blobName);
+                IBlobContainerClientWrapper blobContainerClient = BlobContainerClientWrapperFactory.Create(Options.ConnectionString, containerName);
+                IBlockBlobClientWrapper blockBlobClient = blobContainerClient.GetBlockBlobClient(blobName);
 
                 using MemoryStream memoryStream = new MemoryStream();
                 Task fetchTask = blockBlobClient.DownloadToAsync(memoryStream);
 
                 if (!fetchTask.Wait(Options.ExecutionTimeout * 1000))
                 {
-                    string error = Properties.Resources.ExecutionDelayExceeded;
+                    string error = string.Format(Properties.Resources.BlobFetchExecutionDelayExceeded, Options.ExecutionTimeout, blobName, containerName);
                     Logger.LogError(error);
 
                     return Result.Fail(error);
@@ -224,7 +219,7 @@ namespace TotovBuilder.Shared.Azure
             }
             catch (Exception e)
             {
-                string error = string.Format(Properties.Resources.BlobFetchingError, blobName, containerName, e);
+                string error = string.Format(Properties.Resources.BlobFetchError, blobName, containerName, e);
                 Logger.LogError(error);
 
                 return Result.Fail(error);
@@ -239,28 +234,24 @@ namespace TotovBuilder.Shared.Azure
         /// <param name="data">List of blob names and their data.</param>
         /// <param name="createHttpHeadersFunction">Function for creating the HTTP headers to apply to the updated blobs.</param>
         /// <param name="deletionIgnorePatterns">Patterns to avoid deleting matching blobs.</param>
-        [ExcludeFromCodeCoverage(Justification = "Access to Azure blob storage.")]
         private Result ExecuteUpdateContainer(string containerName, Dictionary<string, byte[]> data, Func<BlobHttpHeaders>? createHttpHeadersFunction, params string[] deletionIgnorePatterns)
         {
             data = data.ToDictionary(kvp => kvp.Key.Replace(Path.DirectorySeparatorChar, '/'), kvp => kvp.Value); // Making sure blob name have the same separators as on Azure
 
             try
             {
-                Logger.LogInformation(string.Format(Properties.Resources.ContainerUpdating, containerName));
+                Logger.LogInformation(string.Format(Properties.Resources.UpdatingContainer, containerName));
 
                 List<string> blobsToDelete = new List<string>();
-                BlobContainerClient blobContainerClient = new BlobContainerClient(Options.ConnectionString, containerName);
+                IBlobContainerClientWrapper blobContainerClient = BlobContainerClientWrapperFactory.Create(Options.ConnectionString, containerName);
                 blobContainerClient.CreateIfNotExists();
 
-                foreach (Page<BlobItem> page in blobContainerClient.GetBlobs().AsPages())
+                foreach (IBlobItemWrapper existingBlob in blobContainerClient.GetBlobs())
                 {
-                    foreach (BlobItem existingBlob in page.Values)
+                    if (!data.ContainsKey(existingBlob.Name)
+                        && (!deletionIgnorePatterns.Any(dip => Regex.IsMatch(existingBlob.Name, dip))))
                     {
-                        if (!data.ContainsKey(existingBlob.Name)
-                            && (!deletionIgnorePatterns.Any(dip => Regex.IsMatch(existingBlob.Name, dip))))
-                        {
-                            blobsToDelete.Add(existingBlob.Name);
-                        }
+                        blobsToDelete.Add(existingBlob.Name);
                     }
                 }
 
@@ -283,9 +274,9 @@ namespace TotovBuilder.Shared.Azure
                 {
                     deleteTasks.Add(Task.Run(() =>
                     {
-                        Logger.LogInformation(string.Format(Properties.Resources.BlobDeleting, blobName, containerName));
+                        Logger.LogInformation(string.Format(Properties.Resources.DeletingBlob, blobName, containerName));
 
-                        BlockBlobClient blockBlobClient = blobContainerClient.GetBlockBlobClient(blobName);
+                        IBlockBlobClientWrapper blockBlobClient = blobContainerClient.GetBlockBlobClient(blobName);
                         blockBlobClient.DeleteIfExists();
                     }));
                 }
@@ -294,9 +285,9 @@ namespace TotovBuilder.Shared.Azure
                     Task.WhenAll(createAndUpdateTasks),
                     Task.WhenAll(deleteTasks));
 
-                if (!createAndUpdateTasks.All(t => t.IsCompletedSuccessfully))
+                if (!createAndUpdateTasks.All(t => t.Result.IsSuccess))
                 {
-                    return Result.Fail(string.Concat(Environment.NewLine, createAndUpdateTasks.Select(t => t.Result.Errors)));
+                    return Result.Merge(createAndUpdateTasks.Where(t => !t.Result.IsSuccess).Select(t => t.Result).ToArray());
                 }
 
                 Logger.LogInformation(string.Format(Properties.Resources.ContainerUpdated, containerName));
@@ -305,7 +296,7 @@ namespace TotovBuilder.Shared.Azure
             }
             catch (Exception e)
             {
-                string error = string.Format(Properties.Resources.ContainerUpdatingError, containerName, e);
+                string error = string.Format(Properties.Resources.ContainerUpdateError, containerName, e);
                 Logger.LogError(error);
 
                 return Result.Fail(error);
