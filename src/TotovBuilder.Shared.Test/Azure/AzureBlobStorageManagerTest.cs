@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Text;
+﻿using System.Text;
 using Azure.Storage.Blobs.Models;
 using FluentAssertions;
 using FluentResults;
@@ -385,7 +382,7 @@ System.Exception: Upload error");
             Dictionary<string, string> data = new Dictionary<string, string>()
             {
                 { "index.html", "<html><body><p>Hello World!</p></body></html>" },
-                { "src\\index.js", "function start() { }" }
+                { Path.Combine("src\\index.js"), "function start() { }" }
             };
             Dictionary<string, byte[]> bytes = new Dictionary<string, byte[]>();
 
