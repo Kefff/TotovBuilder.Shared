@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
-namespace TotovBuilder.Shared.Abstractions.Azure
+namespace TotovBuilder.Deployer.Abstractions.Wrappers.Azure
 {
     /// <summary>
     /// Provides the functionalities of a <see cref="BlobContainerClient"/> wrapper.

@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Azure.Storage.Blobs;
-using TotovBuilder.Shared.Abstractions.Azure;
+using TotovBuilder.Deployer.Abstractions.Wrappers.Azure;
 
-namespace TotovBuilder.Shared.Azure
+namespace TotovBuilder.Shared.Wrappers.Azure
 {
     /// <summary>
     /// Represents an <see cref="IBlobContainerClientWrapper"/> factory.

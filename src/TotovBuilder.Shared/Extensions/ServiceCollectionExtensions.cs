@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TotovBuilder.Deployer.Abstractions.Wrappers.Azure;
 using TotovBuilder.Shared.Abstractions.Azure;
 using TotovBuilder.Shared.Azure;
+using TotovBuilder.Shared.Wrappers.Azure;
 
 namespace TotovBuilder.Shared.Extensions
 {

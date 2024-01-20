@@ -1,4 +1,4 @@
-﻿namespace TotovBuilder.Shared.Abstractions.Azure
+﻿namespace TotovBuilder.Deployer.Abstractions.Wrappers.Azure
 {
     /// <summary>
     /// Provides the functionnalities of a <see cref="IBlobContainerClientWrapper"/> factory.

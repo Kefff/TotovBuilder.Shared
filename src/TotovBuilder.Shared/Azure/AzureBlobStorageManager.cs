@@ -4,6 +4,7 @@ using Azure.Storage.Blobs.Models;
 using FluentResults;
 using Microsoft.Extensions.Logging;
 using MimeMapping;
+using TotovBuilder.Deployer.Abstractions.Wrappers.Azure;
 using TotovBuilder.Shared.Abstractions.Azure;
 
 namespace TotovBuilder.Shared.Azure

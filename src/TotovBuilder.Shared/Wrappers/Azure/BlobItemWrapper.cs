@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Azure.Storage.Blobs.Models;
-using TotovBuilder.Shared.Abstractions.Azure;
+using TotovBuilder.Deployer.Abstractions.Wrappers.Azure;
 
-namespace TotovBuilder.Shared.Azure
+namespace TotovBuilder.Shared.Wrappers.Azure
 {
     /// <summary>
     /// Represents a <see cref="BlobItem"/> wrapper
