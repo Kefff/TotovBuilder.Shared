@@ -13,7 +13,7 @@ namespace TotovBuilder.Shared.Test.Azure
         public void Constructor_ShouldCreateNewInstance()
         {
             // Act
-            AzureBlobStorageManagerOptions options = new AzureBlobStorageManagerOptions("$web", 30);
+            AzureBlobStorageManagerOptions options = new("$web", 30);
 
             // Assert
             options.ConnectionString.Should().Be("$web");

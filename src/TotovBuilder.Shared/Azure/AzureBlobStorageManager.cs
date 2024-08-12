@@ -159,7 +159,7 @@ namespace TotovBuilder.Shared.Azure
 
                 httpHeaders.ContentType = Path.HasExtension(blobName) ? MimeUtility.GetMimeMapping(blobName) : "application/octet-stream";
 
-                using MemoryStream memoryStream = new MemoryStream(data);
+                using MemoryStream memoryStream = new(data);
                 Task updateTask = blockBlobClient.UploadAsync(memoryStream, httpHeaders);
 
                 if (!updateTask.Wait(Options.ExecutionTimeout * 1000))
@@ -198,7 +198,7 @@ namespace TotovBuilder.Shared.Azure
                 IBlobContainerClientWrapper blobContainerClient = BlobContainerClientWrapperFactory.Create(Options.ConnectionString, containerName);
                 IBlockBlobClientWrapper blockBlobClient = blobContainerClient.GetBlockBlobClient(blobName);
 
-                using MemoryStream memoryStream = new MemoryStream();
+                using MemoryStream memoryStream = new();
                 Task fetchTask = blockBlobClient.DownloadToAsync(memoryStream);
 
                 if (!fetchTask.Wait(Options.ExecutionTimeout * 1000))
@@ -211,7 +211,7 @@ namespace TotovBuilder.Shared.Azure
 
                 memoryStream.Flush();
                 memoryStream.Position = 0;
-                StreamReader streamReader = new StreamReader(memoryStream);
+                StreamReader streamReader = new(memoryStream);
                 string blobData = streamReader.ReadToEnd();
 
                 Logger.LogInformation(string.Format(Properties.Resources.BlobFetched, blobName, containerName));
@@ -243,7 +243,7 @@ namespace TotovBuilder.Shared.Azure
             {
                 Logger.LogInformation(string.Format(Properties.Resources.UpdatingContainer, containerName));
 
-                List<string> blobsToDelete = new List<string>();
+                List<string> blobsToDelete = [];
                 IBlobContainerClientWrapper blobContainerClient = BlobContainerClientWrapperFactory.Create(Options.ConnectionString, containerName);
                 blobContainerClient.CreateIfNotExists();
 
@@ -256,8 +256,8 @@ namespace TotovBuilder.Shared.Azure
                     }
                 }
 
-                List<Task<Result>> createAndUpdateTasks = new List<Task<Result>>();
-                List<Task> deleteTasks = new List<Task>();
+                List<Task<Result>> createAndUpdateTasks = [];
+                List<Task> deleteTasks = [];
 
                 foreach (string blobName in data.Keys)
                 {

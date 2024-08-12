@@ -25,17 +25,17 @@ namespace TotovBuilder.Shared.Test.Azure
             string blobName = "index.html";
             string data = "<html><body><p>Hello World!</p></body></html>";
 
-            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new();
             blockBlobClientMock
                 .Setup(m => m.DownloadToAsync(It.IsAny<Stream>()))
                 .Callback((Stream s) => s.Write(Encoding.UTF8.GetBytes(data)))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
-            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new Mock<IBlobContainerClientWrapper>();
+            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
 
-            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new Mock<IBlobContainerClientWrapperFactory>();
+            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
             blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
@@ -45,7 +45,7 @@ namespace TotovBuilder.Shared.Test.Azure
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 blobContainerClientWrapperFactoryMock.Object,
                 getOptionsFunction);
@@ -76,7 +76,7 @@ namespace TotovBuilder.Shared.Test.Azure
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 new Mock<IBlobContainerClientWrapperFactory>().Object,
                 getOptionsFunction);
@@ -102,16 +102,16 @@ namespace TotovBuilder.Shared.Test.Azure
             int executionTimeout = 1;
             string blobName = "index.html";
 
-            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new();
             blockBlobClientMock
                 .Setup(m => m.DownloadToAsync(It.IsAny<Stream>()))
                 .Returns(Task.Delay(1500))
                 .Verifiable();
 
-            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new Mock<IBlobContainerClientWrapper>();
+            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
 
-            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new Mock<IBlobContainerClientWrapperFactory>();
+            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
             blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
@@ -121,7 +121,7 @@ namespace TotovBuilder.Shared.Test.Azure
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 blobContainerClientWrapperFactoryMock.Object,
                 getOptionsFunction);
@@ -147,16 +147,16 @@ namespace TotovBuilder.Shared.Test.Azure
             int executionTimeout = 10;
             string blobName = "index.html";
 
-            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new();
             blockBlobClientMock
                 .Setup(m => m.DownloadToAsync(It.IsAny<Stream>()))
                 .Throws(new Exception("Download error"))
                 .Verifiable();
 
-            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new Mock<IBlobContainerClientWrapper>();
+            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
 
-            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new Mock<IBlobContainerClientWrapperFactory>();
+            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
             blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
@@ -166,7 +166,7 @@ namespace TotovBuilder.Shared.Test.Azure
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 blobContainerClientWrapperFactoryMock.Object,
                 getOptionsFunction);
@@ -200,17 +200,17 @@ System.Exception: Download error");
                 ? new BlobHttpHeaders() { CacheControl = "max-age=3600" }
                 : null;
 
-            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new();
             blockBlobClientMock
                 .Setup(m => m.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
-            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new Mock<IBlobContainerClientWrapper>();
+            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
             blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
 
-            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new Mock<IBlobContainerClientWrapperFactory>();
+            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
             blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
@@ -220,7 +220,7 @@ System.Exception: Download error");
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 blobContainerClientWrapperFactoryMock.Object,
                 getOptionsFunction);
@@ -255,16 +255,16 @@ System.Exception: Download error");
             string blobName = "index.html";
             string data = "<html><body><p>Hello World!</p></body></html>";
 
-            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new();
             blockBlobClientMock
                 .Setup(m => m.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>()))
                 .Returns(Task.Delay(1500))
                 .Verifiable();
 
-            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new Mock<IBlobContainerClientWrapper>();
+            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
 
-            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new Mock<IBlobContainerClientWrapperFactory>();
+            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
             blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
@@ -274,7 +274,7 @@ System.Exception: Download error");
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 blobContainerClientWrapperFactoryMock.Object,
                 getOptionsFunction);
@@ -301,16 +301,16 @@ System.Exception: Download error");
             string blobName = "index.html";
             string data = "<html><body><p>Hello World!</p></body></html>";
 
-            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> blockBlobClientMock = new();
             blockBlobClientMock
                 .Setup(m => m.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>()))
                 .Throws(new Exception("Upload error"))
                 .Verifiable();
 
-            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new Mock<IBlobContainerClientWrapper>();
+            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
 
-            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new Mock<IBlobContainerClientWrapperFactory>();
+            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
             blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
@@ -320,7 +320,7 @@ System.Exception: Download error");
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 blobContainerClientWrapperFactoryMock.Object,
                 getOptionsFunction);
@@ -352,7 +352,7 @@ System.Exception: Upload error");
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 new Mock<IBlobContainerClientWrapperFactory>().Object,
                 getOptionsFunction);
@@ -379,12 +379,12 @@ System.Exception: Upload error");
             string connectionString = "ConnectionString";
             string containerName = "$web";
             int executionTimeout = 10;
-            Dictionary<string, string> data = new Dictionary<string, string>()
+            Dictionary<string, string> data = new()
             {
                 { "index.html", "<html><body><p>Hello World!</p></body></html>" },
                 { Path.Combine("src\\index.js"), "function start() { }" }
             };
-            Dictionary<string, byte[]> bytes = new Dictionary<string, byte[]>();
+            Dictionary<string, byte[]> bytes = [];
 
             foreach (string key in data.Keys)
             {
@@ -395,31 +395,31 @@ System.Exception: Upload error");
                 ? () => new BlobHttpHeaders() { CacheControl = "max-age=3600" }
                 : null;
 
-            Mock<IBlockBlobClientWrapper> indexBlockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> indexBlockBlobClientMock = new();
             indexBlockBlobClientMock
                 .Setup(m => m.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
-            Mock<IBlockBlobClientWrapper> javascriptBlockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> javascriptBlockBlobClientMock = new();
             indexBlockBlobClientMock
                 .Setup(m => m.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
-            Mock<IBlockBlobClientWrapper> invalidBlockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> invalidBlockBlobClientMock = new();
             invalidBlockBlobClientMock.Setup(m => m.DeleteIfExists()).Verifiable();
 
-            Mock<IBlobItemWrapper> indexBlobItemMock = new Mock<IBlobItemWrapper>();
+            Mock<IBlobItemWrapper> indexBlobItemMock = new();
             indexBlobItemMock.SetupGet(m => m.Name).Returns("index.html");
 
-            Mock<IBlobItemWrapper> presetsBlobItemMock = new Mock<IBlobItemWrapper>();
+            Mock<IBlobItemWrapper> presetsBlobItemMock = new();
             presetsBlobItemMock.SetupGet(m => m.Name).Returns("data/presets.json");
 
-            Mock<IBlobItemWrapper> invalidBlobItemMock = new Mock<IBlobItemWrapper>();
+            Mock<IBlobItemWrapper> invalidBlobItemMock = new();
             invalidBlobItemMock.SetupGet(m => m.Name).Returns("img/invalid.css");
 
-            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new Mock<IBlobContainerClientWrapper>();
+            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
             blobContainerClientMock
                 .Setup(m => m.GetBlobs())
@@ -434,7 +434,7 @@ System.Exception: Upload error");
             blobContainerClientMock.Setup(m => m.GetBlockBlobClient("src/index.js")).Returns(javascriptBlockBlobClientMock.Object).Verifiable();
             blobContainerClientMock.Setup(m => m.GetBlockBlobClient("img/invalid.css")).Returns(invalidBlockBlobClientMock.Object).Verifiable();
 
-            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new Mock<IBlobContainerClientWrapperFactory>();
+            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
             blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
@@ -444,7 +444,7 @@ System.Exception: Upload error");
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 blobContainerClientWrapperFactoryMock.Object,
                 getOptionsFunction);
@@ -479,38 +479,38 @@ System.Exception: Upload error");
             string connectionString = "ConnectionString";
             string containerName = "$web";
             int executionTimeout = 10;
-            Dictionary<string, string> data = new Dictionary<string, string>()
+            Dictionary<string, string> data = new()
             {
                 { "index.html", "<html><body><p>Hello World!</p></body></html>" },
                 { "src\\index.js", "function start() { }" }
             };
 
-            Mock<IBlockBlobClientWrapper> indexBlockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> indexBlockBlobClientMock = new();
             indexBlockBlobClientMock
                 .Setup(m => m.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>()))
                 .Throws(new Exception("Upload error"))
                 .Verifiable();
 
-            Mock<IBlockBlobClientWrapper> javascriptBlockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> javascriptBlockBlobClientMock = new();
             javascriptBlockBlobClientMock
                 .Setup(m => m.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobHttpHeaders>()))
                 .Throws(new Exception("Connection error"))
                 .Verifiable();
 
-            Mock<IBlockBlobClientWrapper> invalidBlockBlobClientMock = new Mock<IBlockBlobClientWrapper>();
+            Mock<IBlockBlobClientWrapper> invalidBlockBlobClientMock = new();
             invalidBlockBlobClientMock
                 .Setup(m => m.DeleteIfExists());
 
-            Mock<IBlobItemWrapper> indexBlobItemMock = new Mock<IBlobItemWrapper>();
+            Mock<IBlobItemWrapper> indexBlobItemMock = new();
             indexBlobItemMock.SetupGet(m => m.Name).Returns("index.html");
 
-            Mock<IBlobItemWrapper> javascriptBlobItemMock = new Mock<IBlobItemWrapper>();
+            Mock<IBlobItemWrapper> javascriptBlobItemMock = new();
             javascriptBlobItemMock.SetupGet(m => m.Name).Returns("src/index.js");
 
-            Mock<IBlobItemWrapper> invalidBlobItemMock = new Mock<IBlobItemWrapper>();
+            Mock<IBlobItemWrapper> invalidBlobItemMock = new();
             invalidBlobItemMock.SetupGet(m => m.Name).Returns("img/invalid.css");
 
-            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new Mock<IBlobContainerClientWrapper>();
+            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
             blobContainerClientMock
                 .Setup(m => m.GetBlobs())
@@ -525,7 +525,7 @@ System.Exception: Upload error");
             blobContainerClientMock.Setup(m => m.GetBlockBlobClient("src/index.js")).Returns(javascriptBlockBlobClientMock.Object).Verifiable();
             blobContainerClientMock.Setup(m => m.GetBlockBlobClient("img/invalid.css")).Returns(invalidBlockBlobClientMock.Object).Verifiable();
 
-            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new Mock<IBlobContainerClientWrapperFactory>();
+            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
             blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
@@ -535,7 +535,7 @@ System.Exception: Upload error");
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 blobContainerClientWrapperFactoryMock.Object,
                 getOptionsFunction);
@@ -563,20 +563,20 @@ System.Exception: Connection error");
             string connectionString = "ConnectionString";
             string containerName = "$web";
             int executionTimeout = 10;
-            Dictionary<string, string> data = new Dictionary<string, string>()
+            Dictionary<string, string> data = new()
             {
                 { "index.html", "<html><body><p>Hello World!</p></body></html>" },
                 { "src\\index.js", "function start() { }" }
             };
 
-            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new Mock<IBlobContainerClientWrapper>();
+            Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
             blobContainerClientMock
                 .Setup(m => m.GetBlobs())
                 .Throws(new Exception("Connection error"))
                 .Verifiable();
 
-            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new Mock<IBlobContainerClientWrapperFactory>();
+            Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
             blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
@@ -586,7 +586,7 @@ System.Exception: Connection error");
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 blobContainerClientWrapperFactoryMock.Object,
                 getOptionsFunction);
@@ -617,7 +617,7 @@ System.Exception: Connection error");
                 return new AzureBlobStorageManagerOptions(connectionString, executionTimeout);
             }
 
-            AzureBlobStorageManager azureBlobStorageManager = new AzureBlobStorageManager(
+            AzureBlobStorageManager azureBlobStorageManager = new(
                 new Mock<ILogger<AzureBlobStorageManager>>().Object,
                 new Mock<IBlobContainerClientWrapperFactory>().Object,
                 getOptionsFunction);
