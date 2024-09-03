@@ -358,7 +358,7 @@ System.Exception: Upload error");
                 getOptionsFunction);
 
             // Act
-            Result result = await azureBlobStorageManager.UpdateBlob(containerName, "Blob", Array.Empty<byte>(), It.IsAny<BlobHttpHeaders>());
+            Result result = await azureBlobStorageManager.UpdateBlob(containerName, "Blob", [], It.IsAny<BlobHttpHeaders>());
 
             // Assert
             result.IsSuccess.Should().BeFalse();
