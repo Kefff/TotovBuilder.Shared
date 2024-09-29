@@ -33,10 +33,16 @@ namespace TotovBuilder.Shared.Test.Azure
                 .Verifiable();
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient(blobName))
+                .Returns(blockBlobClientMock.Object)
+                .Verifiable();
 
             Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
-            blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
+            blobContainerClientWrapperFactoryMock
+                .Setup(m => m.Create(connectionString, containerName))
+                .Returns(blobContainerClientMock.Object)
+                .Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
             AzureBlobStorageManagerOptions getOptionsFunction()
@@ -109,10 +115,16 @@ namespace TotovBuilder.Shared.Test.Azure
                 .Verifiable();
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient(blobName))
+                .Returns(blockBlobClientMock.Object)
+                .Verifiable();
 
             Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
-            blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
+            blobContainerClientWrapperFactoryMock
+                .Setup(m => m.Create(connectionString, containerName))
+                .Returns(blobContainerClientMock.Object)
+                .Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
             AzureBlobStorageManagerOptions getOptionsFunction()
@@ -154,10 +166,16 @@ namespace TotovBuilder.Shared.Test.Azure
                 .Verifiable();
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient(blobName))
+                .Returns(blockBlobClientMock.Object)
+                .Verifiable();
 
             Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
-            blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
+            blobContainerClientWrapperFactoryMock
+                .Setup(m => m.Create(connectionString, containerName))
+                .Returns(blobContainerClientMock.Object)
+                .Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
             AzureBlobStorageManagerOptions getOptionsFunction()
@@ -208,10 +226,16 @@ System.Exception: Download error");
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient(blobName))
+                .Returns(blockBlobClientMock.Object)
+                .Verifiable();
 
             Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
-            blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
+            blobContainerClientWrapperFactoryMock
+                .Setup(m => m.Create(connectionString, containerName))
+                .Returns(blobContainerClientMock.Object)
+                .Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
             AzureBlobStorageManagerOptions getOptionsFunction()
@@ -262,10 +286,16 @@ System.Exception: Download error");
                 .Verifiable();
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient(blobName))
+                .Returns(blockBlobClientMock.Object)
+                .Verifiable();
 
             Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
-            blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
+            blobContainerClientWrapperFactoryMock
+                .Setup(m => m.Create(connectionString, containerName))
+                .Returns(blobContainerClientMock.Object)
+                .Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
             AzureBlobStorageManagerOptions getOptionsFunction()
@@ -308,10 +338,16 @@ System.Exception: Download error");
                 .Verifiable();
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient(blobName)).Returns(blockBlobClientMock.Object).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient(blobName))
+                .Returns(blockBlobClientMock.Object)
+                .Verifiable();
 
             Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
-            blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
+            blobContainerClientWrapperFactoryMock
+                .Setup(m => m.Create(connectionString, containerName))
+                .Returns(blobContainerClientMock.Object)
+                .Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
             AzureBlobStorageManagerOptions getOptionsFunction()
@@ -408,16 +444,24 @@ System.Exception: Upload error");
                 .Verifiable();
 
             Mock<IBlockBlobClientWrapper> invalidBlockBlobClientMock = new();
-            invalidBlockBlobClientMock.Setup(m => m.DeleteIfExists()).Verifiable();
+            invalidBlockBlobClientMock
+                .Setup(m => m.DeleteIfExists())
+                .Verifiable();
 
             Mock<IBlobItemWrapper> indexBlobItemMock = new();
-            indexBlobItemMock.SetupGet(m => m.Name).Returns("index.html");
+            indexBlobItemMock
+                .SetupGet(m => m.Name)
+                .Returns("index.html");
 
             Mock<IBlobItemWrapper> presetsBlobItemMock = new();
-            presetsBlobItemMock.SetupGet(m => m.Name).Returns("data/presets.json");
+            presetsBlobItemMock
+                .SetupGet(m => m.Name)
+                .Returns("data/presets.json");
 
             Mock<IBlobItemWrapper> invalidBlobItemMock = new();
-            invalidBlobItemMock.SetupGet(m => m.Name).Returns("img/invalid.css");
+            invalidBlobItemMock
+                .SetupGet(m => m.Name)
+                .Returns("img/invalid.css");
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
@@ -430,12 +474,24 @@ System.Exception: Upload error");
                     invalidBlobItemMock.Object
                 })
                 .Verifiable();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient("index.html")).Returns(indexBlockBlobClientMock.Object).Verifiable();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient("src/index.js")).Returns(javascriptBlockBlobClientMock.Object).Verifiable();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient("img/invalid.css")).Returns(invalidBlockBlobClientMock.Object).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient("index.html"))
+                .Returns(indexBlockBlobClientMock.Object)
+                .Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient("src/index.js"))
+                .Returns(javascriptBlockBlobClientMock.Object)
+                .Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient("img/invalid.css"))
+                .Returns(invalidBlockBlobClientMock.Object)
+                .Verifiable();
 
             Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
-            blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
+            blobContainerClientWrapperFactoryMock
+                .Setup(m => m.Create(connectionString, containerName))
+                .Returns(blobContainerClientMock.Object)
+                .Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
             AzureBlobStorageManagerOptions getOptionsFunction()
@@ -502,16 +558,27 @@ System.Exception: Upload error");
                 .Setup(m => m.DeleteIfExists());
 
             Mock<IBlobItemWrapper> indexBlobItemMock = new();
-            indexBlobItemMock.SetupGet(m => m.Name).Returns("index.html");
+            indexBlobItemMock
+                .SetupGet(m => m.Name)
+                .Returns("index.html")
+                .Verifiable();
 
             Mock<IBlobItemWrapper> javascriptBlobItemMock = new();
-            javascriptBlobItemMock.SetupGet(m => m.Name).Returns("src/index.js");
+            javascriptBlobItemMock
+                .SetupGet(m => m.Name)
+                .Returns("src/index.js")
+                .Verifiable();
 
             Mock<IBlobItemWrapper> invalidBlobItemMock = new();
-            invalidBlobItemMock.SetupGet(m => m.Name).Returns("img/invalid.css");
+            invalidBlobItemMock
+                .SetupGet(m => m.Name)
+                .Returns("img/invalid.css")
+                .Verifiable();
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
-            blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.CreateIfNotExists())
+                .Verifiable();
             blobContainerClientMock
                 .Setup(m => m.GetBlobs())
                 .Returns(new IBlobItemWrapper[]
@@ -521,12 +588,24 @@ System.Exception: Upload error");
                     invalidBlobItemMock.Object
                 })
                 .Verifiable();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient("index.html")).Returns(indexBlockBlobClientMock.Object).Verifiable();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient("src/index.js")).Returns(javascriptBlockBlobClientMock.Object).Verifiable();
-            blobContainerClientMock.Setup(m => m.GetBlockBlobClient("img/invalid.css")).Returns(invalidBlockBlobClientMock.Object).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient("index.html"))
+                .Returns(indexBlockBlobClientMock.Object)
+                .Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient("src/index.js"))
+                .Returns(javascriptBlockBlobClientMock.Object)
+                .Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.GetBlockBlobClient("img/invalid.css"))
+                .Returns(invalidBlockBlobClientMock.Object)
+                .Verifiable();
 
             Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
-            blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
+            blobContainerClientWrapperFactoryMock
+                .Setup(m => m.Create(connectionString, containerName))
+                .Returns(blobContainerClientMock.Object)
+                .Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
             AzureBlobStorageManagerOptions getOptionsFunction()
@@ -577,7 +656,10 @@ System.Exception: Connection error");
                 .Verifiable();
 
             Mock<IBlobContainerClientWrapperFactory> blobContainerClientWrapperFactoryMock = new();
-            blobContainerClientWrapperFactoryMock.Setup(m => m.Create(connectionString, containerName)).Returns(blobContainerClientMock.Object).Verifiable();
+            blobContainerClientWrapperFactoryMock
+                .Setup(m => m.Create(connectionString, containerName))
+                .Returns(blobContainerClientMock.Object)
+                .Verifiable();
 
             bool isGetOptionsFunctionCalled = false;
             AzureBlobStorageManagerOptions getOptionsFunction()
