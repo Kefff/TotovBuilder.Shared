@@ -451,17 +451,20 @@ System.Exception: Upload error");
             Mock<IBlobItemWrapper> indexBlobItemMock = new();
             indexBlobItemMock
                 .SetupGet(m => m.Name)
-                .Returns("index.html");
+                .Returns("index.html")
+                .Verifiable();
 
             Mock<IBlobItemWrapper> presetsBlobItemMock = new();
             presetsBlobItemMock
                 .SetupGet(m => m.Name)
-                .Returns("data/presets.json");
+                .Returns("data/presets.json")
+                .Verifiable();
 
             Mock<IBlobItemWrapper> invalidBlobItemMock = new();
             invalidBlobItemMock
                 .SetupGet(m => m.Name)
-                .Returns("img/invalid.css");
+                .Returns("img/invalid.css")
+                .Verifiable();
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
