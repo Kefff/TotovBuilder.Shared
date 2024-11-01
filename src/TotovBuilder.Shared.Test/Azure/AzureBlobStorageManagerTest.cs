@@ -8,7 +8,7 @@ using FluentAssertions;
 using FluentResults;
 using Microsoft.Extensions.Logging;
 using Moq;
-using TotovBuilder.Deployer.Abstractions.Wrappers.Azure;
+using TotovBuilder.Shared.Abstractions.Wrappers.Azure;
 using TotovBuilder.Shared.Azure;
 using Xunit;
 

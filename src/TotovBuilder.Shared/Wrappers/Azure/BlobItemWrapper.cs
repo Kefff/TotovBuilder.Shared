@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Azure.Storage.Blobs.Models;
-using TotovBuilder.Deployer.Abstractions.Wrappers.Azure;
+using TotovBuilder.Shared.Abstractions.Wrappers.Azure;
 
 namespace TotovBuilder.Shared.Wrappers.Azure
 {

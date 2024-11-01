@@ -3,7 +3,7 @@ using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
-using TotovBuilder.Deployer.Abstractions.Wrappers.Azure;
+using TotovBuilder.Shared.Abstractions.Wrappers.Azure;
 
 namespace TotovBuilder.Shared.Wrappers.Azure
 {
