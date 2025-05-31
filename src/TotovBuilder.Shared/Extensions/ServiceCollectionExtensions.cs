@@ -20,7 +20,7 @@ namespace TotovBuilder.Shared.Extensions
         /// <returns>Services.</returns>
         public static IServiceCollection AddAzureBlobStorageManager(this IServiceCollection services, Func<IServiceProvider, AzureBlobStorageManagerOptions> getOptionsFunction)
         {
-            services.AddSingleton<IAzureBlobStorageManager>((IServiceProvider serviceProvider) =>
+            services.AddSingleton<IAzureBlobStorageManager>(serviceProvider =>
             {
                 IBlobContainerClientWrapperFactory blobContainerClientWrapperFactory = serviceProvider.GetRequiredService<IBlobContainerClientWrapperFactory>();
                 ILogger<AzureBlobStorageManager> logger = serviceProvider.GetRequiredService<ILogger<AzureBlobStorageManager>>();
