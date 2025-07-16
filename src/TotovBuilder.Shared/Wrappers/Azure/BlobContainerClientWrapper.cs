@@ -3,7 +3,7 @@ using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
-using TotovBuilder.Deployer.Abstractions.Wrappers.Azure;
+using TotovBuilder.Shared.Abstractions.Wrappers.Azure;
 
 namespace TotovBuilder.Shared.Wrappers.Azure
 {
@@ -36,7 +36,7 @@ namespace TotovBuilder.Shared.Wrappers.Azure
         /// <inheritdoc/>
         public IEnumerable<IBlobItemWrapper> GetBlobs()
         {
-            List<BlobItemWrapper> wrappers = new List<BlobItemWrapper>();
+            List<BlobItemWrapper> wrappers = [];
 
             foreach (Page<BlobItem> page in Instance.GetBlobs().AsPages())
             {
@@ -53,7 +53,7 @@ namespace TotovBuilder.Shared.Wrappers.Azure
         public IBlockBlobClientWrapper GetBlockBlobClient(string blobName)
         {
             BlockBlobClient blockBlobClient = Instance.GetBlockBlobClient(blobName);
-            BlockBlobClientWrapper wrapper = new BlockBlobClientWrapper(blockBlobClient);
+            BlockBlobClientWrapper wrapper = new(blockBlobClient);
 
             return wrapper;
         }

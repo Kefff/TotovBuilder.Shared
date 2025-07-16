@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Azure.Storage.Blobs;
-using TotovBuilder.Deployer.Abstractions.Wrappers.Azure;
+using TotovBuilder.Shared.Abstractions.Wrappers.Azure;
 
 namespace TotovBuilder.Shared.Wrappers.Azure
 {
@@ -13,8 +13,8 @@ namespace TotovBuilder.Shared.Wrappers.Azure
         /// <inheritdoc/>
         public IBlobContainerClientWrapper Create(string connectionString, string blobContainerName)
         {
-            BlobContainerClient blobContainerClient = new BlobContainerClient(connectionString, blobContainerName);
-            BlobContainerClientWrapper wrapper = new BlobContainerClientWrapper(blobContainerClient);
+            BlobContainerClient blobContainerClient = new(connectionString, blobContainerName);
+            BlobContainerClientWrapper wrapper = new(blobContainerClient);
 
             return wrapper;
         }

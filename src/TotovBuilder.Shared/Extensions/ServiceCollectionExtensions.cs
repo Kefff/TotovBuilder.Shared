@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TotovBuilder.Deployer.Abstractions.Wrappers.Azure;
 using TotovBuilder.Shared.Abstractions.Azure;
+using TotovBuilder.Shared.Abstractions.Wrappers.Azure;
 using TotovBuilder.Shared.Azure;
 using TotovBuilder.Shared.Wrappers.Azure;
 
@@ -20,7 +20,7 @@ namespace TotovBuilder.Shared.Extensions
         /// <returns>Services.</returns>
         public static IServiceCollection AddAzureBlobStorageManager(this IServiceCollection services, Func<IServiceProvider, AzureBlobStorageManagerOptions> getOptionsFunction)
         {
-            services.AddSingleton<IAzureBlobStorageManager>((IServiceProvider serviceProvider) =>
+            services.AddSingleton<IAzureBlobStorageManager>(serviceProvider =>
             {
                 IBlobContainerClientWrapperFactory blobContainerClientWrapperFactory = serviceProvider.GetRequiredService<IBlobContainerClientWrapperFactory>();
                 ILogger<AzureBlobStorageManager> logger = serviceProvider.GetRequiredService<ILogger<AzureBlobStorageManager>>();

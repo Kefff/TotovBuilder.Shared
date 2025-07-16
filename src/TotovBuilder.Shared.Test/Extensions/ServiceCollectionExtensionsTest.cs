@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Threading.Tasks;
+using FluentAssertions;
 using FluentResults;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,9 +21,9 @@ namespace TotovBuilder.Shared.Test.Extensions
         public async Task AddAzureBlobStorageManager_ShouldAddAzureBlobStorageManagerToServiceCollection()
         {
             // Arrange
-            Mock<ILogger<AzureBlobStorageManager>> loggerMock = new Mock<ILogger<AzureBlobStorageManager>>();
+            Mock<ILogger<AzureBlobStorageManager>> loggerMock = new();
 
-            ServiceCollection serviceCollection = new ServiceCollection();
+            ServiceCollection serviceCollection = new();
             serviceCollection.AddSingleton(loggerMock.Object);
 
             bool isGetOptionsFunctionCalled = false;
