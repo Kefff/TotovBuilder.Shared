@@ -9,46 +9,37 @@ namespace TotovBuilder.Shared.Abstractions.Wrappers.Azure
     public interface IBlobContainerClientWrapper
     {
         /// <summary>
-        /// The <see cref="CreateIfNotExists(PublicAccessType, Metadata, BlobContainerEncryptionScopeOptions, CancellationToken)"/>
-        /// operation creates a new container under the specified account. If the container with the same name
-        /// already exists, it is not changed.
+        /// The <see cref="Create(PublicAccessType, Metadata, BlobContainerEncryptionScopeOptions, CancellationToken)"/>
+        /// operation creates a new container
+        /// under the specified account. If the container with the same name
+        /// already exists, the operation fails.
         ///
         /// For more information, see
         /// <see href="https://docs.microsoft.com/rest/api/storageservices/create-container">
         /// Create Container</see>.
         /// </summary>
-        /// <param name="publicAccessType">
-        /// Optionally specifies whether data in the container may be accessed
-        /// publicly and the level of access. <see cref="PublicAccessType.BlobContainer"/>
-        /// specifies full public read access for container and blob data.
-        /// Clients can enumerate blobs within the container via anonymous
-        /// request, but cannot enumerate containers within the storage
-        /// account.  <see cref="PublicAccessType.Blob"/> specifies public
-        /// read access for blobs.  Blob data within this container can be
-        /// read via anonymous request, but container data is not available.
-        /// Clients cannot enumerate blobs within the container via anonymous
-        /// request.  <see cref="PublicAccessType.None"/> specifies that the
-        /// container data is private to the account owner.
-        /// </param>
-        /// <param name="metadata">
-        /// Optional custom metadata to set for this container.
-        /// </param>
-        /// <param name="encryptionScopeOptions">
-        /// Optional encryption scope options to set for this container.
-        /// </param>
-        /// <param name="cancellationToken">
-        /// Optional <see cref="CancellationToken"/> to propagate
-        /// notifications that the operation should be cancelled.
-        /// </param>
-        /// <returns>
-        /// If the container does not already exist, a <see cref="Response{ContainerInfo}"/>
-        /// describing the newly created container. If the container already exists, <c>null</c>.
-        /// </returns>
         /// <remarks>
         /// A <see cref="RequestFailedException"/> will be thrown if
         /// a failure occurs.
         /// </remarks>
-        void CreateIfNotExists();
+        void Create();
+
+        /// <summary>
+        /// The <see cref="Exists"/> operation can be called on a
+        /// <see cref="BlobContainerClient"/> to see if the associated container
+        /// exists on the storage account in the storage service.
+        /// </summary>
+        /// <returns>
+        /// Returns true if the container exists.
+        /// </returns>
+        /// <remarks>
+        /// A <see cref="RequestFailedException"/> will be thrown if
+        /// a failure occurs. If you want to create the container if
+        /// it doesn't exist, use
+        /// <see cref="CreateIfNotExists(PublicAccessType, Metadata, BlobContainerEncryptionScopeOptions, CancellationToken)"/>
+        /// instead.
+        /// </remarks>
+        bool Exists();
 
         /// <summary>
         /// The <see cref="GetBlobs"/> operation returns an async sequence

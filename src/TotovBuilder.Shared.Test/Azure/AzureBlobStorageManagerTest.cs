@@ -229,7 +229,11 @@ System.Exception: Download error");
                 .Verifiable();
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
-            blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
+            blobContainerClientMock.Setup(m => m.Exists())
+                .Returns(false)
+                .Verifiable();
+            blobContainerClientMock.Setup(m => m.Create())
+                .Verifiable();
             blobContainerClientMock
                 .Setup(m => m.GetBlockBlobClient(blobName))
                 .Returns(blockBlobClientMock.Object)
@@ -471,7 +475,10 @@ System.Exception: Upload error");
                 .Verifiable();
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
-            blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.Exists())
+                .Returns(true)
+                .Verifiable();
             blobContainerClientMock
                 .Setup(m => m.GetBlobs())
                 .Returns(new IBlobItemWrapper[]
@@ -584,7 +591,8 @@ System.Exception: Upload error");
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
             blobContainerClientMock
-                .Setup(m => m.CreateIfNotExists())
+                .Setup(m => m.Exists())
+                .Returns(true)
                 .Verifiable();
             blobContainerClientMock
                 .Setup(m => m.GetBlobs())
@@ -656,7 +664,10 @@ System.Exception: Connection error");
             };
 
             Mock<IBlobContainerClientWrapper> blobContainerClientMock = new();
-            blobContainerClientMock.Setup(m => m.CreateIfNotExists()).Verifiable();
+            blobContainerClientMock
+                .Setup(m => m.Exists())
+                .Returns(true)
+                .Verifiable();
             blobContainerClientMock
                 .Setup(m => m.GetBlobs())
                 .Throws(new Exception("Connection error"))

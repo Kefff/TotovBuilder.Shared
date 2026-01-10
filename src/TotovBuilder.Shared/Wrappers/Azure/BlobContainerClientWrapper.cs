@@ -26,11 +26,17 @@ namespace TotovBuilder.Shared.Wrappers.Azure
         {
             Instance = instance;
         }
-
+        
         /// <inheritdoc/>
-        public void CreateIfNotExists()
+        public void Create()
         {
-            Instance.CreateIfNotExists();
+            Instance.Create();
+        }
+        
+        /// <inheritdoc/>
+        public bool Exists()
+        {
+            return Instance.Exists();
         }
 
         /// <inheritdoc/>
