@@ -147,7 +147,13 @@ namespace TotovBuilder.Shared.Azure
                 if (blobContainerClient == null)
                 {
                     blobContainerClient = BlobContainerClientWrapperFactory.Create(Options.ConnectionString, containerName);
-                    blobContainerClient.CreateIfNotExists();
+
+                    bool exists = blobContainerClient.Exists();
+
+                    if (!exists)
+                    {
+                        blobContainerClient.Create();
+                    }
                 }
 
                 IBlockBlobClientWrapper blockBlobClient = blobContainerClient.GetBlockBlobClient(blobName);
@@ -245,7 +251,13 @@ namespace TotovBuilder.Shared.Azure
 
                 List<string> blobsToDelete = [];
                 IBlobContainerClientWrapper blobContainerClient = BlobContainerClientWrapperFactory.Create(Options.ConnectionString, containerName);
-                blobContainerClient.CreateIfNotExists();
+
+                bool exists = blobContainerClient.Exists();
+
+                if (!exists)
+                {
+                    blobContainerClient.Create();
+                }
 
                 foreach (IBlobItemWrapper existingBlob in blobContainerClient.GetBlobs())
                 {
